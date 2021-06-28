@@ -2,23 +2,19 @@ function _() {
 
 	this.index = {
 		init: () => {
-
 			$('input[type="text"]').focus(e => {
 				$(e.target).closest('.field').removeClass('error');
 				if(e.target.id == 'txt-dokumen') {
 					$('#btn-select-file').removeClass('negative');
 				}
 			});
-
 			$('input[name="dokumen"]').change(e => {
 				$('#txt-dokumen').val(e.target.files[0].name);
 			});
-
 			$('#btn-select-file').click(e => {
 				e.preventDefault();
 				$('input[name="dokumen"]').trigger('click');
 			});
-
 			$('#btn-send').click(e => {
 				e.preventDefault();
 				let nama = $('input[name="nama"]');
@@ -37,7 +33,6 @@ function _() {
 				if(nama.val() == '' || handphone.val() == '' || dokumen.val() == '') return false;
 				$('form').submit();
 			});
-
 		}
 	};
 

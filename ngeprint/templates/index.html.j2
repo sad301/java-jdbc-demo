@@ -16,7 +16,7 @@
 					<p>If you're new here, please read <a href="#">this</a> first</p>
 				</div>
 			</div>
-			<form class="ui bottom attached padded small form segment" method="post">
+			<form class="ui bottom attached padded small form segment" method="post" enctype="multipart/form-data">
 				<div class="field">
 					<div class="ui left icon input">
 						<input type="text" name="nama" placeholder="Nama">
@@ -37,6 +37,7 @@
 						<button id="btn-select-file" class="ui icon button"><i class="folder open icon"></i></button>
 					</div>
 				</div>
+				<input type="hidden" name="id" value="{{ id }}">
 				<button id="btn-send" class="ui small primary labeled icon button"><i class="send icon"></i>Kirim</button>
 			</form>
 		</div>
