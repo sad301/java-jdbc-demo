@@ -6,6 +6,7 @@ create table config (
 
 create table jobs (
   id varchar(16) not null,
+  kode varchar(16) not null,
   tanggal date not null default current_timestamp,
   nama varchar(16) not null,
   handphone varchar(16) not null,

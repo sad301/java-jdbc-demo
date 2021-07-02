@@ -35,4 +35,4 @@ def execute_update(sql, data):
         conn.close()
     except sqlite3.Error as err:
         return False, err
-    return True,
+    return True, "done!"

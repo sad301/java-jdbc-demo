@@ -18,10 +18,7 @@ def upload():
 		return {"message": "invalid request"}, 400
 	if not "dokumen" in request.files:
 		return {"message": "invalid request"}, 400
-	# nama = request.form["nama"]
-	# handphone = request.form["handphone"]
-	# dokumen = request.files["dokumen"]
 	job = new_job(request)
-	# res = make_response(job)
-	# res.headers["Content-Type"] = "application/json"
-	return render_template("upload.html.j2")
+	res = make_response(job)
+	res.headers["Content-Type"] = "application/json"
+	return res
