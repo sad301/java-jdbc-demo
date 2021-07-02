@@ -1,10 +1,12 @@
 from flask import request
 from sqlite3 import connect
-from os import urandom
+from os import urandom, makedirs
+from os.path import exists
 from datetime import datetime
 from werkzeug.utils import secure_filename
+from ngeprint import config
 
-def job(request):
+def new_job(request):
     f = request.files["dokumen"]
     job = {
         "id": "-".join([urandom(5).hex() for i in range(3)]),
@@ -22,3 +24,4 @@ def job(request):
     if not exists(path):
         makedirs(path)
     f.save("{}/{}".format(path, job["dokumen"]))
+    return job

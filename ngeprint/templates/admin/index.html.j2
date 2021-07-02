@@ -1,0 +1,41 @@
+{% extends "layout.html.j2" %}
+
+{% block title %}
+<title>Administrator</title>
+{% endblock %}
+
+{% block content %}
+  <div class="ui stackable three column middle aligned grid" style="height: 100vh">
+    <div class="column"></div>
+    <div class="column">
+      <h1 class="ui center aligned header">Administrator</h1>
+      <div class="ui top attached icon message">
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">Informasi</div>
+          <p>Masukkan username dan password</p>
+        </div>
+      </div>
+      <div class="ui bottom attached small padded form segment">
+        <div class="field">
+          <div class="ui left icon input">
+            <input id="username" type="text" placeholder="Username">
+            <i class="user icon"></i>
+          </div>
+        </div>
+        <div class="field">
+          <div class="ui left icon input">
+            <input id="password" type="password" placeholder="Password">
+            <i class="key icon"></i>
+          </div>
+        </div>
+        <button class="ui primary small labeled icon button">Login<i class="sign in icon"></i></button>
+      </div>
+    </div>
+    <div class="column"></div>
+  </div>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">_.q().admin.init();</script>
+{% endblock %}

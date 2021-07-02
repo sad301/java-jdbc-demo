@@ -13,4 +13,6 @@ finally:
 		exit()
 
 app = Flask(__name__)
+
 import ngeprint.customer_routes
+import ngeprint.admin_routes

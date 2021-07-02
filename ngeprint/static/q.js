@@ -20,19 +20,37 @@ function _() {
 				let nama = $('input[name="nama"]');
 				let handphone = $('input[name="handphone"]');
 				let dokumen = $('input[name="dokumen"]');
-				if(nama.val() == '') {
-					nama.closest('.field').addClass('error');
-				}
-				if(handphone.val() == '') {
-					handphone.closest('.field').addClass('error');
-				}
-				if(dokumen.val() == '') {
-					dokumen.closest('.field').addClass('error');
-					dokumen.siblings('.ui.button').addClass('negative');
-				}
+				[nama, handphone, dokumen].forEach(el => {
+					if(el.val() == '') {
+						el.closest('.field').addClass('error');
+						el.siblings('.ui.button').addClass('negative');
+					}
+				});
 				if(nama.val() == '' || handphone.val() == '' || dokumen.val() == '') return false;
 				$('form').submit();
 			});
+		}
+	};
+
+	this.admin = {};
+
+	this.admin.common = {
+		sidebar: () => {
+			$('#sidebar-toggle').click(function () {
+				$('.ui.sidebar').sidebar('toggle');
+			});
+		}
+	};
+
+	this.admin.home = {
+		init: () => {
+			this.admin.common.sidebar();
+		}
+	};
+
+	this.admin.jobs = {
+		init: () => {
+			this.admin.common.sidebar();
 		}
 	};
 

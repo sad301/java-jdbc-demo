@@ -1,8 +1,8 @@
-from flask import request, render_template
-from ngeprint import app
+from flask import request, render_template, make_response
+from ngeprint import app, config
+from ngeprint.utils import new_job
 from random import randrange
 from werkzeug.utils import secure_filename
-import sqlite3
 
 # --- routes ---
 
@@ -18,3 +18,10 @@ def upload():
 		return {"message": "invalid request"}, 400
 	if not "dokumen" in request.files:
 		return {"message": "invalid request"}, 400
+	# nama = request.form["nama"]
+	# handphone = request.form["handphone"]
+	# dokumen = request.files["dokumen"]
+	job = new_job(request)
+	# res = make_response(job)
+	# res.headers["Content-Type"] = "application/json"
+	return render_template("upload.html.j2")

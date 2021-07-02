@@ -1,3 +1,9 @@
+create table config (
+  _key varchar(32) not null,
+  _value text not null,
+  primary key (_key)
+);
+
 create table jobs (
   id varchar(16) not null,
   tanggal date not null default current_timestamp,
@@ -15,3 +21,7 @@ create table jobs (
   status text check(status in ('UNCONFIRMED', 'CONFIRMED', 'PRINTED', 'PAID')) not null default 'UNCONFIRMED',
   primary key (id)
 );
+
+insert into config values
+  ('user.username', 'admin'),
+  ('user.password', 'nimda');

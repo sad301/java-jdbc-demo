@@ -1,0 +1,28 @@
+{% macro top_menu() %}
+  <div class="ui top fixed borderless menu">
+    <div class="ui container">
+      <a id="sidebar-toggle" href="#" class="item"><i class="sidebar icon"></i></a>
+      <div class="header item">Ngeprint</div>
+    </div>
+  </div>
+{% endmacro %}
+
+{% macro sidebar(active_item="Home") %}
+  {% set items = [
+    ("Home", "/admin/home", "home icon"),
+    ("About", "/admin/about", "question circle icon"),
+    ("Jobs", "/admin/jobs", "clone icon")
+    ] %}
+  <div class="ui inverted vertical borderless sidebar menu">
+    {% for item in items %}
+      {% if item[0] == active_item %}
+        <div class="active item">{{ item[0] }}<i class="{{ item[2] }}"></i></div>
+      {% else %}
+        <a href="{{ item[1] }}" class="item">{{ item[0] }}<i class="{{ item[2] }}"></i></a>
+      {% endif %}
+    {% endfor %}
+  </div>
+  <div class="pusher">
+    {{ caller() }}
+  </div>
+{% endmacro %}

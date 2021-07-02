@@ -1,0 +1,16 @@
+{% extends "layout.html.j2" %}
+
+{% block title %}
+  <title>Administrator</title>
+{% endblock %}
+
+{% block content %}
+  {% import "macros.html.j2" as macros %}
+  {% call macros.sidebar() %}
+    {{ macros.top_menu() }}
+  {% endcall %}
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">_.q().admin.home.init();</script>
+{% endblock %}
