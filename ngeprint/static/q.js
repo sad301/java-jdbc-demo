@@ -20,26 +20,44 @@ function _() {
 				let nama = $('input[name="nama"]');
 				let handphone = $('input[name="handphone"]');
 				let dokumen = $('input[name="dokumen"]');
+				var formData = new FormData();
 				[nama, handphone, dokumen].forEach(el => {
 					if(el.val() == '') {
 						el.closest('.field').addClass('error');
 						el.siblings('.ui.button').addClass('negative');
 					}
+					if(el.attr('type') == 'text') formData.append(el.attr('name'), el.val());
+					if(el.attr('type') == 'file') formData.append(el.attr('name'), el[0].files[0]);
 				});
 				if(nama.val() == '' || handphone.val() == '' || dokumen.val() == '') return false;
-				$('form').submit();
+				let q = $.ajax({
+					method: 'POST',
+					url: '/api/jobs',
+					data: formData,
+					processData: false,
+					contentType: false,
+					beforeSend: () => $(e.target).addClass('loading')
+				});
+				q.done((data) => location.href = `/cost/${data.id}`);
+				q.fail((xhr, status, err) => console.log(xhr.responseText));
 			});
 		}
 	};
 
-	this.admin = {};
+	this.cost = {};
+	this.cost.init = () => {
+		let id = $('#params').data('id');
+		if(typeof(id) == 'undefined') {
 
-	this.admin.common = {
-		sidebar: () => {
-			$('#sidebar-toggle').click(function () {
-				$('.ui.sidebar').sidebar('toggle');
-			});
 		}
+	};
+
+	this.admin = {};
+	this.admin.common = {};
+	this.admin.common.sidebar = () => {
+		$('#sidebar-toggle').click(function () {
+			$('.ui.sidebar').sidebar('toggle');
+		});
 	};
 
 	this.admin.home = {

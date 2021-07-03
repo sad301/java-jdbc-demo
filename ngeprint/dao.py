@@ -6,6 +6,7 @@ def __dict_factory(cursor, row):
         d[col[0]] = row[idx]
     return d
 
+# return <status:boolean>, <data:array>, <error>
 def execute_query(sql, data=None):
     temp = []
     try:
@@ -21,8 +22,8 @@ def execute_query(sql, data=None):
         curr.close()
         conn.close()
     except sqlite3.Error as err:
-        return False, err
-    return True, temp
+        return False, None, err
+    return True, temp, None
 
 def execute_update(sql, data):
     try:

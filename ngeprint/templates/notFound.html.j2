@@ -1,0 +1,23 @@
+{% extends "layout.html.j2" %}
+
+{% block title %}
+  <title>404 Not Found</title>
+{% endblock %}
+
+{% block content %}
+  <div class="ui stackable three column middle aligned grid" style="height: 100vh">
+    <div class="column"></div>
+    <div class="column">
+      <div class="ui center aligned huge header">404 Not Found</div>
+      <div class="ui icon message">
+        <i class="info circle icon"></i>
+        <div class="content">
+          <div class="header">Informasi</div>
+          <p>{{ error.description }}</p>
+        </div>
+      </div>
+      <a href="/" class="ui tiny primary labeled icon button"><i class="home icon"></i>Kembali</a>
+    </div>
+    <div class="column"></div>
+  </div>
+{% endblock %}

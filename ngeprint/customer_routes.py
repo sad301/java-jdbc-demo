@@ -1,6 +1,7 @@
-from flask import request, render_template, make_response
-from ngeprint import app, config
+from flask import abort, request, render_template, make_response, redirect, url_for
+from ngeprint import app, config, job_dao
 from ngeprint.utils import new_job
+# from ngeprint.job_dao import retrieve
 from random import randrange
 from werkzeug.utils import secure_filename
 
@@ -10,15 +11,18 @@ from werkzeug.utils import secure_filename
 def index():
 	return render_template("index.html.j2")
 
-@app.route("/upload", methods=["POST"])
-def upload():
-	if not request.form or not request.files:
-		return {"message": "invalid request"}, 400
-	if not all(key in request.form.keys() for key in ["nama", "handphone"]):
-		return {"message": "invalid request"}, 400
-	if not "dokumen" in request.files:
-		return {"message": "invalid request"}, 400
-	job, res, err = new_job(request)
-	if not res:
-		return {"message": str(err)}, 500
-	return render_template("upload.html.j2", job=job)
+@app.route("/cost")
+@app.route("/cost/<id>")
+def cost(id=None):
+	if not id:
+		return redirect(url_for("index"))
+	status, data, err = job_dao.retrieve(id)
+	if not status:
+		abort(500)
+	if len(data) < 1:
+		abort(404, "Dokumen yang anda cari tidak ditemukan")
+	return render_template("cost.html.j2", id=id)
+
+@app.errorhandler(404)
+def notFound(error):
+	return render_template("notFound.html.j2", error=error), 404
