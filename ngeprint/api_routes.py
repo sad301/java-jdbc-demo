@@ -26,8 +26,14 @@ def api_jobs():
         return {"message": str(error)}, 500
     return jsonify(data)
 
-@app.route("/api/jobs/<id>")
+@app.route("/api/jobs/<id>", methods=["GET", "DELETE", "PUT"])
 def api_jobs_job(id):
+    if request.method == "PUT":
+        return {"message": "put method"}
+    # delete method
+    if request.method == "DELETE":
+        return {"message": "delete method"}
+    # get method
     status, data, error = job_dao.retrieve(id)
     if not status:
         return {"message": str(error)}, 500

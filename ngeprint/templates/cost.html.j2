@@ -8,19 +8,78 @@
 	<div class="ui stackable three column middle aligned grid" style="height: 100vh">
 		<div class="column"></div>
 		<div class="column">
-			<h1 class="ui center aligned header">Web Printing Service<div class="sub header">Sample</div></h1>
-			<div class="ui padded segment">
-				<div class="ui fluid left icon input">
-					<input type="text" name="" value="">
+			<h1 class="ui center aligned header">Web Printing Service</h1>
+			<div class="ui top attached segment">
+				<div class="ui fluid left icon transparent input">
+					<input type="text" value="{{ job["client_file"] }}" readonly>
 					<i class="pdf file icon"></i>
 				</div>
+				<table class="ui unstackable compact three column small celled table">
+					<thead>
+						<tr>
+							<th>&nbsp;</th>
+							<th>Jumlah</th>
+							<th>Total</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>Grayscale</td>
+							<td>12</td>
+							<td>12000</td>
+						</tr>
+						<tr>
+							<td>Color</td>
+							<td>10</td>
+							<td>20000</td>
+						</tr>
+						<tr>
+							<td>Blank</td>
+							<td>2</td>
+							<td>1000</td>
+						</tr>
+					</tbody>
+					<tfoot>
+						<tr>
+							<th>&nbsp;</th>
+							<th><strong>24</strong></th>
+							<th><strong>33000</strong></th>
+						</tr>
+					</tfoot>
+				</table>
+				<a href="/confirm/{{ job["id"] }}" class="ui small primary labeled icon button"><i class="check icon"></i>Setuju</a>
+				<button class="ui small orange labeled icon cancel button"><i class="times icon"></i>Batal</button>
 			</div>
 		</div>
 		<div class="column"></div>
 	</div>
+	<!-- Do i even need this ??? -->
+	<!--
+	<div class="ui mini modal">
+		<div class="header">Konfirmasi</div>
+		<div class="content">
+			<div class="ui small form">
+				<div class="field">
+					<label>Nama :</label>
+					<div class="ui left icon input">
+						<input type="text" name="" value="">
+						<i class="user icon"></i>
+					</div>
+				</div>
+				<div class="field">
+					<label>Handphone :</label>
+					<div class="ui left icon input">
+						<input type="text" name="" value="">
+						<i class="mobile alternate icon"></i>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	-->
 {%- endblock %}
 
 {% block script %}
-	<script type="text/javascript" id="param" data-id="{{ id }}"></script>
+	<script type="text/javascript" id="params" data-id="{{ job["id"] }}"></script>
 	<script type="text/javascript">_.q().cost.init();</script>
 {% endblock %}

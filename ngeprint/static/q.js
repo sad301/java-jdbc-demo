@@ -46,10 +46,13 @@ function _() {
 
 	this.cost = {};
 	this.cost.init = () => {
-		let id = $('#params').data('id');
-		if(typeof(id) == 'undefined') {
-
-		}
+		$('.ui.cancel.button').click(function (e) {
+			let id = $('#params').data('id');
+			let q = $.ajax({
+				
+			});
+			q.done(data => console.log(data));
+		});
 	};
 
 	this.admin = {};
