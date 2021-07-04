@@ -44,16 +44,43 @@ function _() {
 		}
 	};
 
+	/*
+	 * -------------------------- *
+	 * For use in url: /cost/<id> *
+	 * -------------------------- *
+	 */
+
 	this.cost = {};
 	this.cost.init = () => {
-		$('.ui.cancel.button').click(function (e) {
-			let id = $('#params').data('id');
-			let q = $.ajax({
-				
-			});
-			q.done(data => console.log(data));
+		$('#btn-agree').click(this.cost.agree);
+		$('#btn-cancel').click(this.cost.cancel);
+		$(document).ready(this.cost.ready);
+	};
+	this.cost.agree = () => {
+		console.log('agree');
+	};
+	this.cost.cancel = (e) => {
+		let q = $.ajax({
+			url: `/api/jobs/${$('#params').data('id')}`,
+			method: 'DELETE',
+			beforeSend: () => $(e.target).addClass('loading')
+		});
+		q.done(data => location.href = '/');
+		q.fail((xhr, status, err) => console.log(xhr.responseText));
+	};
+	this.cost.ready = () => {
+		let socket = io();
+		socket.emit('client_connect', {'id': $('#params').data('id')});
+		socket.on('server_confirm', (msg) => {
+			console.log(msg);
 		});
 	};
+
+	/*
+	 * ------------------- *
+	 * For use in : /admin *
+	 * ------------------- *
+	 */
 
 	this.admin = {};
 	this.admin.common = {};

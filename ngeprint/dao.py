@@ -22,18 +22,21 @@ def execute_query(sql, data=None):
         curr.close()
         conn.close()
     except sqlite3.Error as err:
-        return False, None, err
+        return False, temp, err
     return True, temp, None
 
+# return <success>, <affected_row>. <error>
 def execute_update(sql, data):
-    try:
-        conn = sqlite3.connect("ngeprint.db")
-        conn.row_factory = __dict_factory
-        curr = conn.cursor()
-        curr.execute(sql, data)
-        conn.commit()
-        curr.close()
-        conn.close()
-    except sqlite3.Error as err:
-        return False, err
-    return True, "done!"
+	affected_row = -1
+	try:
+		conn = sqlite3.connect("ngeprint.db")
+		conn.row_factory = __dict_factory
+		curr = conn.cursor()
+		curr.execute(sql, data)
+		affected_row = curr.rowcount
+		conn.commit()
+		curr.close()
+		conn.close()
+	except sqlite3.Error as err:
+		return False, affected_row, err
+	return True, affected_row, None

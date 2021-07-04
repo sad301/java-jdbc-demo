@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_socketio import SocketIO
 from json import load
 
 config = None
@@ -13,6 +14,7 @@ finally:
 		exit()
 
 app = Flask(__name__)
+socket_io = SocketIO(app)
 
 import ngeprint.customer_routes
 import ngeprint.admin_routes

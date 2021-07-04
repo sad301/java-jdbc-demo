@@ -4,6 +4,10 @@
 	<title>Ngeprint.Kuy</title>
 {%- endblock %}
 
+{% block script_src -%}
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js" charset="utf-8"></script>
+{%- endblock %}
+
 {% block content -%}
 	<div class="ui stackable three column middle aligned grid" style="height: 100vh">
 		<div class="column"></div>
@@ -47,36 +51,12 @@
 						</tr>
 					</tfoot>
 				</table>
-				<a href="/confirm/{{ job["id"] }}" class="ui small primary labeled icon button"><i class="check icon"></i>Setuju</a>
-				<button class="ui small orange labeled icon cancel button"><i class="times icon"></i>Batal</button>
+				<button id="btn-agree" class="ui small primary labeled icon button"><i class="check icon"></i>Setuju</button>
+				<button id="btn-cancel" class="ui small orange labeled icon button"><i class="times icon"></i>Batal</button>
 			</div>
 		</div>
 		<div class="column"></div>
 	</div>
-	<!-- Do i even need this ??? -->
-	<!--
-	<div class="ui mini modal">
-		<div class="header">Konfirmasi</div>
-		<div class="content">
-			<div class="ui small form">
-				<div class="field">
-					<label>Nama :</label>
-					<div class="ui left icon input">
-						<input type="text" name="" value="">
-						<i class="user icon"></i>
-					</div>
-				</div>
-				<div class="field">
-					<label>Handphone :</label>
-					<div class="ui left icon input">
-						<input type="text" name="" value="">
-						<i class="mobile alternate icon"></i>
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-	-->
 {%- endblock %}
 
 {% block script %}

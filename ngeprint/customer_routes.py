@@ -1,5 +1,5 @@
 from flask import abort, request, render_template, make_response, redirect, url_for
-from ngeprint import app, config, job_dao
+from ngeprint import app, socket_io, config, job_dao
 from ngeprint.utils import new_job
 # from ngeprint.job_dao import retrieve
 from random import randrange
@@ -34,6 +34,11 @@ def confirm(id=None):
 	if len(jobs) < 1:
 		abort(404, "Dokumen yang anda cari tidak ditemukan")
 	return render_template("confirm.html.j2")
+
+@socket_io.on('client_connect')
+def client_connect(job):
+	session_id = request.sid
+	socket_io.emit("server_confirm", "Job id {} confirmed".format(job["id"]), room=session_id)
 
 @app.errorhandler(404)
 def notFound(error):

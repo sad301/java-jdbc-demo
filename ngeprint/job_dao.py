@@ -21,7 +21,5 @@ def update(job):
     values = tuple(job.values())
     return execute_update(sql, values)
 
-def delete(job):
-    sql = "delete from jobs where id=?"
-    values = tuple(job.values())
-    return execute_update(sql, values)
+def delete(id):
+	return execute_update("delete from jobs where id=?", (id,))
