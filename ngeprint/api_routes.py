@@ -1,7 +1,8 @@
 from flask import jsonify, request
-from ngeprint import app, job_dao
+from ngeprint import config, app, job_dao
 from ngeprint.utils import new_job
 from os import remove
+from shutil import rmtree
 
 @app.route("/api")
 def api_index():
@@ -39,6 +40,7 @@ def api_jobs_job(id):
 		if len(jobs) < 1:
 			return {"message": "not found"}, 404
 		remove(jobs[0]["server_file"])
+		rmtree("{}/{}".format( config["temp_dir"], jobs[0]["id"] ))
 		success, affected_row, error = job_dao.delete(id)
 		if not success:
 			return {"message": str(error)}, 500

@@ -2,5 +2,6 @@
   "host": "127.0.0.1",
   "port": 8000,
   "debug": true,
-  "upload_dir": "files"
+  "upload_dir": "files",
+	"temp_dir": "temp"
 }

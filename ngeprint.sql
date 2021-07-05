@@ -26,4 +26,7 @@ create table jobs (
 
 insert into config values
   ('user.username', 'admin'),
-  ('user.password', 'nimda');
+  ('user.password', 'nimda'),
+	('price.grayscale', 1000),
+	('price.color', 1500),
+	('price.blank', 500);

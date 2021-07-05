@@ -60,8 +60,8 @@ function _() {
 		socket_io.on('server_confirm', (msg) => {
 			console.log(msg);
 		});
-		socket_io.on('process_done', (msg) => {
-			console.log(msg);
+		socket_io.on('process_done', (job) => {
+			console.log(job);
 		});
 		$('#btn-agree').click(this.cost.agree);
 		$('#btn-cancel').click(this.cost.cancel);
