@@ -55,7 +55,7 @@ function _() {
 		let id = $('#params').data('id');
 		let socket_io = io.connect('http://127.0.0.1:8000');
 		socket_io.on('connect', (msg) => {
-			socket_io.emit('client_connect', {'id': id});
+			socket_io.emit('client_connect', id);
 		});
 		socket_io.on('server_confirm', (msg) => {
 			console.log(msg);

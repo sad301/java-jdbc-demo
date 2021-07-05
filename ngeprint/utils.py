@@ -6,6 +6,7 @@ from datetime import datetime
 from werkzeug.utils import secure_filename
 from ngeprint import config, job_dao, socket_io
 from time import sleep
+from pdf2image import convert_from_path
 
 def new_job(request):
 	f = request.files["dokumen"]
@@ -27,6 +28,9 @@ def new_job(request):
 	return job, success, affected_row, error
 
 def process_job(job, session_id):
-	for i in range(0, 10):
-		socket_io.sleep(0.5)
+	print(job)
+	temp = "{}/{}".format("temp", job["id"])
+	if not exists(temp):
+		makedirs(temp)
+	images = convert_from_path(job["server_file"], size=(200, None), output_folder=temp, output_file="img", fmt="png")
 	socket_io.emit("process_done", "job id {} done!".format(job["id"]), room=session_id)
