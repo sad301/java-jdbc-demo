@@ -4,7 +4,8 @@ from os import urandom, makedirs
 from os.path import exists, splitext
 from datetime import datetime
 from werkzeug.utils import secure_filename
-from ngeprint import config, job_dao
+from ngeprint import config, job_dao, socket_io
+from time import sleep
 
 def new_job(request):
 	f = request.files["dokumen"]
@@ -24,3 +25,8 @@ def new_job(request):
 	f.save(job["server_file"])
 	success, affected_row, error = job_dao.create(job)
 	return job, success, affected_row, error
+
+def process_job(job, session_id):
+	for i in range(0, 10):
+		socket_io.sleep(0.5)
+	socket_io.emit("process_done", "job id {} done!".format(job["id"]), room=session_id)

@@ -14,7 +14,7 @@ finally:
 		exit()
 
 app = Flask(__name__)
-socket_io = SocketIO(app)
+socket_io = SocketIO(app, async_mode="gevent")
 
 import ngeprint.customer_routes
 import ngeprint.admin_routes

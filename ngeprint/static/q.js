@@ -52,9 +52,19 @@ function _() {
 
 	this.cost = {};
 	this.cost.init = () => {
+		let id = $('#params').data('id');
+		let socket_io = io.connect('http://127.0.0.1:8000');
+		socket_io.on('connect', (msg) => {
+			socket_io.emit('client_connect', {'id': id});
+		});
+		socket_io.on('server_confirm', (msg) => {
+			console.log(msg);
+		});
+		socket_io.on('process_done', (msg) => {
+			console.log(msg);
+		});
 		$('#btn-agree').click(this.cost.agree);
 		$('#btn-cancel').click(this.cost.cancel);
-		$(document).ready(this.cost.ready);
 	};
 	this.cost.agree = () => {
 		console.log('agree');
@@ -67,13 +77,6 @@ function _() {
 		});
 		q.done(data => location.href = '/');
 		q.fail((xhr, status, err) => console.log(xhr.responseText));
-	};
-	this.cost.ready = () => {
-		let socket = io();
-		socket.emit('client_connect', {'id': $('#params').data('id')});
-		socket.on('server_confirm', (msg) => {
-			console.log(msg);
-		});
 	};
 
 	/*

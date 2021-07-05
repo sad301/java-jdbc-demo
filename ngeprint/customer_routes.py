@@ -1,9 +1,11 @@
 from flask import abort, request, render_template, make_response, redirect, url_for
 from ngeprint import app, socket_io, config, job_dao
-from ngeprint.utils import new_job
+from ngeprint.utils import new_job, process_job
 # from ngeprint.job_dao import retrieve
 from random import randrange
 from werkzeug.utils import secure_filename
+from pdf2image import convert_from_path
+from threading import Thread
 
 # --- routes ---
 
@@ -38,7 +40,8 @@ def confirm(id=None):
 @socket_io.on('client_connect')
 def client_connect(job):
 	session_id = request.sid
-	socket_io.emit("server_confirm", "Job id {} confirmed".format(job["id"]), room=session_id)
+	socket_io.emit("server_confirm", "Job id {} confirmed!".format(job["id"]), room=session_id)
+	socket_io.start_background_task(target=process_job, job=job, session_id=session_id)
 
 @app.errorhandler(404)
 def notFound(error):
