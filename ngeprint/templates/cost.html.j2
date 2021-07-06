@@ -12,42 +12,42 @@
 	<div class="ui stackable three column middle aligned grid" style="height: 100vh">
 		<div class="column"></div>
 		<div class="column">
-			<h1 class="ui center aligned header">Web Printing Service</h1>
-			<div class="ui top attached segment">
+			<h1 class="ui center aligned header">Web Printing Service<div class="sub header">Versi 1.0.0</div></h1>
+			<div class="ui top attached loading segment">
 				<div class="ui fluid left icon transparent input">
-					<input type="text" value="{{ job["client_file"] }}" readonly>
+					<input type="text" id="client_file" readonly>
 					<i class="pdf file icon"></i>
 				</div>
 				<table class="ui unstackable compact three column small celled table">
 					<thead>
 						<tr>
 							<th>&nbsp;</th>
-							<th>Jumlah</th>
-							<th>Total</th>
+							<th class="right aligned">Jumlah</th>
+							<th class="right aligned">Total</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
+						<tr id="grayscale">
 							<td>Grayscale</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="right aligned">0</td>
+							<td class="right aligned">0</td>
 						</tr>
-						<tr>
+						<tr id="color">
 							<td>Color</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="right aligned">0</td>
+							<td class="right aligned">0</td>
 						</tr>
-						<tr>
+						<tr id="blank">
 							<td>Blank</td>
-							<td>&nbsp;</td>
-							<td>&nbsp;</td>
+							<td class="right aligned">0</td>
+							<td class="right aligned">0</td>
 						</tr>
 					</tbody>
 					<tfoot>
-						<tr>
+						<tr id="total">
 							<th>&nbsp;</th>
-							<th>&nbsp;</th>
-							<th>&nbsp;</th>
+							<th class="right aligned">0</th>
+							<th class="right aligned">0</th>
 						</tr>
 					</tfoot>
 				</table>

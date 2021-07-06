@@ -42,7 +42,17 @@ def client_connect(id):
 	session_id = request.sid
 	socket_io.emit("server_confirm", id, room=session_id)
 	success, jobs, error = job_dao.retrieve(id)
-	socket_io.start_background_task(target=process_job, job=jobs[0], session_id=session_id)
+	if not success:
+		socket_io.emit("process_failed", str(error), room=session_id)
+	else:
+		if len(jobs) < 1:
+			socket_io.emit("process_failed", {"message": "job not found"}, room=session_id)
+		else:
+			if jobs[0]["processed"] == 0:
+				socket_io.start_background_task(target=process_job, job=jobs[0], session_id=session_id)
+			else:
+				jobs[0].pop("kode", None)
+				socket_io.emit("process_done", jobs[0], room=session_id)
 
 @app.errorhandler(404)
 def notFound(error):

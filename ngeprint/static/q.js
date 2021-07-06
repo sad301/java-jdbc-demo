@@ -61,13 +61,33 @@ function _() {
 			console.log(msg);
 		});
 		socket_io.on('process_done', (job) => {
-			console.log(job);
+			let idr = Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'});
+			$('#client_file').val(job.client_file);
+			['grayscale', 'color', 'blank'].forEach(p => {
+				$('#'+p).empty().append([
+					$('<td/>').text(p),
+					$('<td/>',{'class':'right aligned'}).html(job['page_'+p]),
+					$('<td/>',{'class':'right aligned'}).text(job['price_'+p] != 0 ? idr.format(job['price_'+p]) : job['price_'+p])
+				]);
+			});
+			$('#total').empty().append([
+				$('<th/>').html('&nbsp;'),
+				$('<th/>',{'class':'right aligned'}).html(job['page_total']),
+				$('<th/>',{'class':'right aligned'}).text(idr.format(job['price_total']))
+			]);
+			$('.ui.segment').removeClass('loading');
 		});
 		$('#btn-agree').click(this.cost.agree);
 		$('#btn-cancel').click(this.cost.cancel);
 	};
-	this.cost.agree = () => {
-		console.log('agree');
+	this.cost.agree = (e) => {
+		let q = $.ajax({
+			url: `/api/jobs/${$('#params').data('id')}/confirm`,
+			method: 'POST',
+			beforeSend: () => $(e.target).addClass('loading')
+		});
+		q.done(data => location.href = `/confirm/${$('#params').data('id')}`);
+		q.fail((xhr, status, err) => console.log(xhr.responseText));
 	};
 	this.cost.cancel = (e) => {
 		let q = $.ajax({

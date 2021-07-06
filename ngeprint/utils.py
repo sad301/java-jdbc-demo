@@ -75,14 +75,20 @@ def process_job(job, session_id):
 	job["page_grayscale"] = job["page_total"] - (job["page_color"] + job["page_blank"])
 	success, rows, error = config_dao.retrieve()
 	if not success:
+		print(str(error))
 		socket_io.emit("process_failed", str(error), room=session_id)
-	config = {row["_key"]: row["_value"] for row in rows}
-	job["price_grayscale"] = int(job["page_grayscale"]) * int(config["price.grayscale"])
-	job["price_color"] = int(job["page_color"]) * int(config["price.color"])
-	job["price_blank"] = int(job["page_blank"]) * int(config["price.blank"])
-	job["price_total"] = job["price_grayscale"] + job["price_color"] + job["price_blank"]
-	success, row_num, error = job_dao.update(job)
-	if not success:
-		socket_io.emit("process_failed", str(error), room=session_id)
-	socket_io.emit("process_done", job, room=session_id)
-	print("done!")
+	else:
+		config = {row["_key"]: row["_value"] for row in rows}
+		job["price_grayscale"] = int(job["page_grayscale"]) * int(config["price.grayscale"])
+		job["price_color"] = int(job["page_color"]) * int(config["price.color"])
+		job["price_blank"] = int(job["page_blank"]) * int(config["price.blank"])
+		job["price_total"] = job["price_grayscale"] + job["price_color"] + job["price_blank"]
+		job["processed"] = 1
+		success, row_num, error = job_dao.update(job)
+		if not success:
+			print(str(error))
+			socket_io.emit("process_failed", str(error), room=session_id)
+		else:
+			job.pop("kode", None)
+			socket_io.emit("process_done", job, room=session_id)
+			print("done!")

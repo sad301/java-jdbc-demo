@@ -21,6 +21,7 @@ create table jobs (
   price_blank int not null default 0,
   price_total int not null default 0,
   status text check(status in ('UNCONFIRMED', 'CONFIRMED', 'PRINTED', 'PAID')) not null default 'UNCONFIRMED',
+  processed int not null default 0,
   primary key (id)
 );
 

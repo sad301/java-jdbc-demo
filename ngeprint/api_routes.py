@@ -52,3 +52,7 @@ def api_jobs_job(id):
 	if len(data) < 1:
 		return {"message": "not found"}, 404
 	return jsonify(data[0])
+
+@app.route("/api/jobs/<id>/confirm", methods=["POST"])
+def api_jobs_job_confirm(id):
+    return {"message": "job {} confirmed".format(id)}

@@ -16,7 +16,7 @@ def retrieve(id=None):
 
 def update(job):
 	sql = """
-	update jobs set kode=?, tanggal=?, nama=?, handphone=?, client_file=?, server_file=?, page_grayscale=?, page_color=?, page_blank=?, page_total=?, price_grayscale=?, price_color=?, price_blank=?, price_total=?, status=?
+	update jobs set kode=?, tanggal=?, nama=?, handphone=?, client_file=?, server_file=?, page_grayscale=?, page_color=?, page_blank=?, page_total=?, price_grayscale=?, price_color=?, price_blank=?, price_total=?, status=?, processed=?
 	where id=?
 	"""
 	# values = tuple(job.values())
