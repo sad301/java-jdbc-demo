@@ -12,6 +12,7 @@ create table jobs (
   handphone varchar(16) not null,
   client_file text not null,
   server_file text not null,
+	max_page int not null default 0,
   page_grayscale int not null default 0,
   page_color int not null default 0,
   page_blank int not null default 0,
@@ -22,7 +23,6 @@ create table jobs (
   price_total int not null default 0,
   status text check(status in ('UNCONFIRMED', 'CONFIRMED', 'PRINTED', 'PAID')) not null default 'UNCONFIRMED',
   processed int not null default 0,
-  max_page int not null default 0,
   primary key (id)
 );
 

@@ -6,7 +6,7 @@ from datetime import datetime
 from json import dumps
 from werkzeug.utils import secure_filename
 from pdf2image import convert_from_path
-from ngeprint import config, job_dao, config_dao, socket_io
+from ngeprint import config, dao, job_dao, config_dao, socket_io
 # from time import sleep
 
 # jumlah maximal halaman yang bisa diprint
@@ -19,7 +19,7 @@ def max_page(handphone):
 
 def new_job(request):
 	f = request.files["dokumen"]
-	# handphone = request.form["handphone"]
+	handphone = request.form["handphone"]
 	# paid_jobs = 0
 	# success, data, error = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (handphone,))
 	# if not success:
@@ -38,6 +38,7 @@ def new_job(request):
 		makedirs(path)
 	_, ext = splitext(job["client_file"])
 	job["server_file"] = "{}/{}{}".format(path, job["id"], ext)
+	job["max_page"] = max_page(job["handphone"])
 	f.save(job["server_file"])
 	success, affected_row, error = job_dao.create(job)
 	return job, success, affected_row, error

@@ -13,7 +13,7 @@
 		<div class="column"></div>
 		<div class="column">
 			<h1 class="ui center aligned header">Web Printing Service<div class="sub header">Versi 1.0.0</div></h1>
-			<div class="ui top attached loading segment">
+			<div class="ui loading segment">
 				<div class="ui fluid left icon transparent input">
 					<input type="text" id="client_file" readonly>
 					<i class="pdf file icon"></i>
@@ -57,6 +57,22 @@
 		</div>
 		<div class="column"></div>
 	</div>
+	<!-- templates -->
+	<template id="message-template">
+		<div class="ui icon message">
+			<i class="icon"></i>
+			<div class="content">
+				<div class="header"></div>
+				<p></p>
+			</div>
+		</div>
+	</template>
+	<template id="button-agree-template">
+		<button class="ui small primary labeled icon button"><i class="check icon"></i>Setuju</button>
+	</template>
+	<template id="button-cancel-template">
+		<button class="ui small orange labeled icon button"><i class="times icon"></i>Batal</button>
+	</template>
 {%- endblock %}
 
 {% block script %}
