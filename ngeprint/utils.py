@@ -9,8 +9,22 @@ from pdf2image import convert_from_path
 from ngeprint import config, job_dao, config_dao, socket_io
 # from time import sleep
 
+# jumlah maximal halaman yang bisa diprint
+def max_page(handphone):
+	paid_jobs = 0;
+	res = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (handphone,))
+	if len(res[1]) == 1:
+		paid_jobs = res[1][0]["paid_jobs"]
+	return (paid_jobs + 1) * 5
+
 def new_job(request):
 	f = request.files["dokumen"]
+	# handphone = request.form["handphone"]
+	# paid_jobs = 0
+	# success, data, error = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (handphone,))
+	# if not success:
+	# 	return None, success, -1, error
+	# if len(data) == 1:
 	job = {
 		"id": "-".join([urandom(5).hex() for i in range(3)]),
 		"kode": "-".join([urandom(2).hex().upper() for i in range(3)]),
@@ -44,6 +58,7 @@ def __analyze_image(image):
 			else:
 				c = [pixel[0], pixel[1], pixel[2]]
 				c.sort()
+				div = 0
 				try:
 					div = (c[2] - c[0]) / c[1]
 				except ZeroDivisionError as error:

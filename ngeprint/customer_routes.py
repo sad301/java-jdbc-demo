@@ -1,5 +1,5 @@
 from flask import abort, request, render_template, make_response, redirect, url_for
-from ngeprint import app, socket_io, config, job_dao
+from ngeprint import app, socket_io, config, job_dao, dao
 from ngeprint.utils import new_job, process_job
 # from ngeprint.job_dao import retrieve
 from random import randrange
@@ -19,22 +19,23 @@ def cost(id=None):
 	if not id:
 		return redirect(url_for("index"))
 	status, jobs, err = job_dao.retrieve(id)
-	if not status:
-		abort(500)
-	if len(jobs) < 1:
-		abort(404, "Dokumen yang anda cari tidak ditemukan")
-	return render_template("cost.html.j2", job=jobs[0])
+	if not status or len(jobs) < 1:
+		return redirect(url_for("index"))
+	return render_template("cost.html.j2", id=id)
 
 @app.route("/confirm")
 @app.route("/confirm/<id>")
 def confirm(id=None):
 	if not id:
 		return redirect(url_for("index"))
-	status, jobs, err = job_dao.retrieve(id)
-	if not status:
-		abort(500)
-	if len(jobs) < 1:
-		abort(404, "Dokumen yang anda cari tidak ditemukan")
+	res = job_dao.retrieve(id)
+	if not res[0] or len(res[1]) < 1:
+		return redirect(url_for("index"))
+	job = res[1][0]
+	res = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (job["handphone"],))
+	# print(job)
+	if job["page_total"] > (res[1][0]["paid_jobs"] + 1) * 5:
+		return {"message": "fuck off"}
 	return render_template("confirm.html.j2")
 
 @socket_io.on('client_connect')

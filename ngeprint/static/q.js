@@ -61,6 +61,7 @@ function _() {
 			console.log(msg);
 		});
 		socket_io.on('process_done', (job) => {
+			console.log(job);
 			let idr = Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'});
 			$('#client_file').val(job.client_file);
 			['grayscale', 'color', 'blank'].forEach(p => {
