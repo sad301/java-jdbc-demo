@@ -8,9 +8,38 @@
   {% import "macros.html.j2" as macros %}
   {% call macros.sidebar("Jobs")  %}
     {{ macros.top_menu() }}
+    <div class="ui container" style="padding-top: 5em">
+      <h1 class="ui header">Jobs</h1>
+      <table class="ui unstackable celled small table">
+        <thead>
+          <tr>
+            <th class="center aligned">No</th>
+            <th>Tanggal</th>
+            <th>Nama</th>
+            <th>File</th>
+            <th>Total</th>
+            <th>&nbsp;</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot></tfoot>
+      </table>
+    </div>
   {% endcall %}
+  <template id="row-template">
+    <tr>
+      <td class="center aligned"></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td></td>
+    </tr>
+  </template>
 {% endblock %}
 
 {% block script %}
-  <script type="text/javascript">_.q().admin.jobs.init();</script>
+  <script type="text/javascript">
+    _.q().admin.jobs.init();
+  </script>
 {% endblock %}

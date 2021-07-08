@@ -60,6 +60,9 @@ function _() {
 		socket_io.on('server_confirm', (msg) => {
 			console.log(msg);
 		});
+		socket_io.on('process_failed', (msg) => {
+			alert(msg);
+		});
 		socket_io.on('process_done', (job) => {
 			let idr = Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'});
 			$('#client_file').val(job.client_file);
@@ -127,10 +130,30 @@ function _() {
 		}
 	};
 
-	this.admin.jobs = {
-		init: () => {
-			this.admin.common.sidebar();
-		}
+	this.admin.jobs = {};
+	this.admin.jobs.ready = () => {
+		let jq = $.get('/api/jobs');
+		jq.done(jobs => {
+			let rows = [];
+			let row_html = $('#row-template').html();
+			jobs.forEach((job, i) => {
+				let row = $(row_html);
+				row.find('td:nth-child(1)').text(i+1);
+				row.find('td:nth-child(3)').append(() => {
+					return $('<div/>').append([
+						$('<div/>',{'style':'font-weight: bold'}).text(job.nama),
+						$('<p/>').text(job.handphone)
+					]);
+				});
+				row.find('td:nth-child(4)').text(job.client_file)
+				rows.push(row);
+			});
+			$('table.ui.table tbody').empty().append(rows);
+		});
+	};
+	this.admin.jobs.init = () => {
+		this.admin.common.sidebar();
+		$(document).ready(this.admin.jobs.ready);
 	};
 
 }

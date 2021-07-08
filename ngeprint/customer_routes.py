@@ -28,14 +28,14 @@ def cost(id=None):
 def confirm(id=None):
 	if not id:
 		return redirect(url_for("index"))
-	res = job_dao.retrieve(id)
-	if not res[0] or len(res[1]) < 1:
+	result = job_dao.retrieve(id)
+	if not result[0] or len(result[1]) < 1:
 		return redirect(url_for("index"))
-	job = res[1][0]
-	res = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (job["handphone"],))
+	# job = result[1][0]
+	# result = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (job["handphone"],))
 	# print(job)
-	if job["page_total"] > (res[1][0]["paid_jobs"] + 1) * 5:
-		return {"message": "fuck off"}
+	# if job["page_total"] > (res[1][0]["paid_jobs"] + 1) * 5:
+		# return render_template("confirm.html.j2")
 	return render_template("confirm.html.j2")
 
 @socket_io.on('client_connect')

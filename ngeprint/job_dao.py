@@ -1,4 +1,5 @@
 from ngeprint.dao import execute_query, execute_update
+import json
 
 def create(job):
 	sql = """
@@ -12,20 +13,15 @@ def retrieve(id=None):
 	sql = "select * from jobs"
 	if id:
 		sql += " where id=?"
+	sql += " order by tanggal desc"
 	return execute_query(sql, (id,) if id else None)
 
 def update(job):
 	sql = """
-	update	jobs
-	set		kode=?, tanggal=?, nama=?, handphone=?, client_file=?, server_file=?, max_page=?, page_grayscale=?, page_color=?, page_blank=?, page_total=?, price_grayscale=?, price_color=?, price_blank=?, price_total=?, status=?, processed=?
-	where	id=?
+	update jobs set kode=?, tanggal=?, nama=?, handphone=?, client_file=?, server_file=?, max_page=?, page_grayscale=?, page_color=?, page_blank=?, page_total=?, price_grayscale=?, price_color=?, price_blank=?, price_total=?, status=?, processed=? where id=?
 	"""
-	# values = tuple(job.values())
-	values_list = list(tuple(job.values()))
-	id = values_list.pop(0)
-	values_list.append(id)
-	# values = tuple(values_list)
-	return execute_update(sql, tuple(values_list))
+	values = (job["kode"], job["tanggal"], job["nama"], job["handphone"], job["client_file"], job["server_file"], job["max_page"], job["page_grayscale"], job["page_color"], job["page_blank"], job["page_total"], job["price_grayscale"], job["price_color"], job["price_blank"], job["price_total"], job["status"], job["processed"], job["id"])
+	return execute_update(sql, values)
 
 def delete(id):
 	return execute_update("delete from jobs where id=?", (id,))
