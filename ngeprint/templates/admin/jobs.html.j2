@@ -10,15 +10,15 @@
     {{ macros.top_menu() }}
     <div class="ui container" style="padding-top: 5em">
       <h1 class="ui header">Jobs</h1>
-      <table class="ui unstackable celled small table">
+      <table class="ui unstackable small compact six column table">
         <thead>
           <tr>
-            <th class="center aligned">No</th>
+            <th></th>
+            <th>Status</th>
             <th>Tanggal</th>
             <th>Nama</th>
             <th>File</th>
-            <th>Total</th>
-            <th>&nbsp;</th>
+            <th class="right aligned">Total</th>
           </tr>
         </thead>
         <tbody></tbody>
@@ -28,12 +28,26 @@
   {% endcall %}
   <template id="row-template">
     <tr>
-      <td class="center aligned"></td>
+      <td>
+        <div class="ui tiny icon buttons">
+          <button id="btn-open" class="ui icon button"><i class="folder open icon"></i></button>
+          <button id="btn-delete" class="ui icon button"><i class="trash icon"></i></button>
+        </div>
+      </td>
+      <td>
+        <div class="ui pointing dropdown tiny labeled icon button">
+          <i class="caret down icon"></i>
+          <span class="text">Status</span>
+          <div class="menu">
+            <div class="item">Confirmed</div>
+            <div class="item">Paid</div>
+          </div>
+        </div>
+      </td>
       <td></td>
       <td></td>
       <td></td>
-      <td></td>
-      <td></td>
+      <td class="right aligned"></td>
     </tr>
   </template>
 {% endblock %}

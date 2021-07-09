@@ -8,25 +8,39 @@
   <div class="ui stackable three column middle aligned grid" style="height: 100vh">
     <div class="column"></div>
     <div class="column">
-      <h1 class="ui center aligned header">Web Printing Service</h1>
-      <div class="ui top attached icon message">
-        <i class="info circle icon"></i>
-        <div class="content">
-          <div class="header">Informasi</div>
-          <p>Ketikkan kode konfirmasi yang telah dikirimkan ke nomor handphone anda</p>
+      <h1 class="ui center aligned header">Web Printing Service<div class="sub header">Versi 1.0.0</div></h1>
+      {% if job["page_total"] > job["max_page"] %}
+        <div class="ui top attached icon message">
+          <i class="exclamation triangle icon"></i>
+          <div class="content">
+            <div class="header">Pemberitahuan</div>
+            <p>Harap menghubungi operator untuk mendapatkan kode konfirmasi</p>
+          </div>
         </div>
-      </div>
+      {% else %}
+        <div class="ui top attached icon message">
+          <i class="info circle icon"></i>
+          <div class="content">
+            <div class="header">Informasi</div>
+            <p>Ketikkan kode konfirmasi yang telah dikirimkan ke nomor handphone anda</p>
+          </div>
+        </div>
+      {% endif %}
       <div class="ui bottom attached small padded form segment">
         <div class="field">
           <label>Kode Konfirmasi :</label>
-          <div class="ui left icon input">
-            <input type="text" name="" value="">
-            <i class="code icon"></i>
+          <div class="ui input">
+            <input type="text" class="twelve digit">
           </div>
         </div>
-        <button class="ui tiny primary labeled icon button"><i class="send icon"></i>Kirim</button>
+        <button class="ui tiny primary labeled icon disabled button"><i class="send icon"></i>Kirim</button>
       </div>
     </div>
     <div class="column"></div>
   </div>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript" id="params" data-id="{{ job.id }}"></script>
+  <script type="text/javascript">_.q().confirm.init();</script>
 {% endblock %}

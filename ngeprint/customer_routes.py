@@ -6,6 +6,7 @@ from random import randrange
 from werkzeug.utils import secure_filename
 # from pdf2image import convert_from_path
 from threading import Thread
+from json import dumps
 
 # --- routes ---
 
@@ -31,12 +32,16 @@ def confirm(id=None):
 	result = job_dao.retrieve(id)
 	if not result[0] or len(result[1]) < 1:
 		return redirect(url_for("index"))
-	# job = result[1][0]
-	# result = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (job["handphone"],))
-	# print(job)
-	# if job["page_total"] > (res[1][0]["paid_jobs"] + 1) * 5:
-		# return render_template("confirm.html.j2")
-	return render_template("confirm.html.j2")
+	return render_template("confirm.html.j2", job=result[1][0])
+
+@app.route("/done")
+@app.route("/done/<id>")
+def done(id=None):
+	if not id:
+		return redirect(url_for("index"))
+	result = job_dao.retrieve(id)
+	if not result[0] or len(result[1]) < 1:
+		return redirect(url_for("index"))
 
 @socket_io.on('client_connect')
 def client_connect(id):

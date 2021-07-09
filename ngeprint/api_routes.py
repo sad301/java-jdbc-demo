@@ -53,6 +53,21 @@ def api_jobs_job(id):
 		return {"message": "not found"}, 404
 	return jsonify(data[0])
 
-@app.route("/api/jobs/<id>/confirm", methods=["POST"])
+@app.route("/api/jobs/<id>/confirm", methods=["PUT"])
 def api_jobs_job_confirm(id):
+    if not request.form:
+        return {"message": "invalid request"}, 400
+    if not "kode" in request.form.keys():
+        return {"message": "invalid request"}, 400
+    success, jobs, error = job_dao.retrieve(id)
+    if not success:
+        return {"message": str(error)}, 500
+    if len(jobs) < 1:
+        return {"message": "not found"}, 404
+    if request.form["kode"] != jobs[0]["kode"]:
+        return {"message": "invalid confirmation code"}, 403
+    jobs[0]["status"] = "CONFIRMED"
+    success, num_rows, error = job_dao.update(jobs[0])
+    if not success:
+        return {"message": str(error)}, 500
     return {"message": "job {} confirmed".format(id)}

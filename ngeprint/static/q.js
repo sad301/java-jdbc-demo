@@ -79,26 +79,18 @@ function _() {
 				$('<th/>',{'class':'right aligned'}).text(idr.format(job['price_total']))
 			]);
 			if(job.page_total > job.max_page) {
-				let msg = $($('#message-template').html());
-				msg.addClass('warning');
-				msg.find('i.icon').addClass('exclamation triangle');
-				msg.find('div.header').text('Informasi');
-				msg.find('p').text('Jumlah halaman melebihi batas maksimum. Harap menghubungi operator untuk mendapatkan kode konfirmasi');
-				$('table.ui.table').after(msg);
+				$('table.ui.table').after($($('#warning-message-template').html()));
 			}
 			$('.ui.segment').removeClass('loading');
 		});
-		$('#btn-agree').click(this.cost.agree);
+		$('#btn-confirm').click(this.cost.confirm);
 		$('#btn-cancel').click(this.cost.cancel);
 	};
-	this.cost.agree = (e) => {
-		let q = $.ajax({
-			url: `/api/jobs/${$('#params').data('id')}/confirm`,
-			method: 'POST',
-			beforeSend: () => $(e.target).addClass('loading')
-		});
-		q.done(data => location.href = `/confirm/${$('#params').data('id')}`);
-		q.fail((xhr, status, err) => console.log(xhr.responseText));
+	this.cost.confirm = (e) => {
+		$(e.target).addClass('loading');
+		setTimeout(function () {
+			location.href = `/confirm/${$('#params').data('id')}`;
+		}, 1000);
 	};
 	this.cost.cancel = (e) => {
 		let q = $.ajax({
@@ -108,6 +100,35 @@ function _() {
 		});
 		q.done(data => location.href = '/');
 		q.fail((xhr, status, err) => console.log(xhr.responseText));
+	};
+
+	/*
+	 * -----------------------------
+	 * For use in url: /confirm/<id>
+	 * -----------------------------
+	 */
+
+	this.confirm = {};
+	this.confirm.init = () => {
+		$('.twelve.digit').mask('AAAA-AAAA-AAAA').keyup((e) => {
+			$(e.target).val($(e.target).val().toUpperCase());
+			if($(e.target).val().length < 14) {
+				$('button.ui.button').addClass('disabled');
+			}
+			else {
+				$('button.ui.button').removeClass('disabled');
+			}
+		});
+		$('button.ui.button').click((e) => {
+			let jq = $.ajax({
+				url: `/api/jobs/${$('#params').data('id')}/confirm`,
+				method: 'PUT',
+				data: {kode: $('input').val()},
+				beforeSend: () => $(e.target).addClass('loading')
+			});
+			jq.done((data) => location.href = `/done/${$('#params').data('id')}`);
+			jq.fail((xhr, status, err) => console.log(xhr.responseText));
+		});
 	};
 
 	/*
@@ -132,20 +153,42 @@ function _() {
 
 	this.admin.jobs = {};
 	this.admin.jobs.ready = () => {
+		let idr = Intl.NumberFormat('id-ID', {'style':'currency', 'currency':'IDR'});
 		let jq = $.get('/api/jobs');
 		jq.done(jobs => {
 			let rows = [];
 			let row_html = $('#row-template').html();
 			jobs.forEach((job, i) => {
 				let row = $(row_html);
-				row.find('td:nth-child(1)').text(i+1);
+				row.find('.ui.dropdown').dropdown();
+				row.find('td:nth-child(1) button#btn-open').click(() => {
+					location.href = `/admin/jobs/${job.id}`;
+				});
 				row.find('td:nth-child(3)').append(() => {
+					let date = new Date(job.tanggal);
+					return $('<div/>').append([
+						$('<div/>',{'style':'font-weight: bold'}).text(date.toLocaleString('id', {day: '2-digit', month: 'long', year: 'numeric'})),
+						$('<p/>').text(date.toLocaleString([], {hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false}))
+					]);
+				});
+				row.find('td:nth-child(4)').append(() => {
 					return $('<div/>').append([
 						$('<div/>',{'style':'font-weight: bold'}).text(job.nama),
 						$('<p/>').text(job.handphone)
 					]);
 				});
-				row.find('td:nth-child(4)').text(job.client_file)
+				row.find('td:nth-child(5)').append(() => {
+					return $('<div/>',{'class':'ui transparent fluid left icon input'}).append([
+						$('<i/>',{'class':'pdf file icon'}),
+						$('<input/>',{'value':job.client_file})
+					]);
+				});
+				row.find('td:nth-child(6)').append(() => {
+					return $('<div/>').append([
+						$('<div/>',{'style':'font-weight: bold'}).text(idr.format(job.price_total)),
+						$('<p/>').text(`${job.page_total} lembar`)
+					]);
+				});
 				rows.push(row);
 			});
 			$('table.ui.table tbody').empty().append(rows);
