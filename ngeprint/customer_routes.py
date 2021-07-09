@@ -42,6 +42,9 @@ def done(id=None):
 	result = job_dao.retrieve(id)
 	if not result[0] or len(result[1]) < 1:
 		return redirect(url_for("index"))
+	if result[1][0]["status"] != "CONFIRMED":
+		return redirect(url_for("index"))
+	return render_template("done.html.j2")
 
 @socket_io.on('client_connect')
 def client_connect(id):
