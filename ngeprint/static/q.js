@@ -145,10 +145,9 @@ function _() {
 		});
 	};
 
-	this.admin.home = {
-		init: () => {
-			this.admin.common.sidebar();
-		}
+	this.admin.home = {};
+	this.admin.home.init = () => {
+		this.admin.common.sidebar();
 	};
 
 	this.admin.jobs = {};
@@ -161,8 +160,16 @@ function _() {
 			jobs.forEach((job, i) => {
 				let row = $(row_html);
 				row.find('.ui.dropdown').dropdown();
-				row.find('td:nth-child(1) button#btn-open').click(() => {
-					location.href = `/admin/jobs/${job.id}`;
+				row.find('td:nth-child(1) a.ui.primary.button').attr('href', `/admin/jobs/${job.id}`);
+				row.find('td:nth-child(2)').append(() => {
+					let color = '';
+					let status = job.status.toLowerCase();
+					switch(status) {
+						case 'confirmed': color = 'orange'; break;
+						case 'printed': color = 'green'; break;
+						case 'paid': color = 'blue'; break;
+					}
+					return $('<div/>',{'class':`ui ${color} label`}).text(status);
 				});
 				row.find('td:nth-child(3)').append(() => {
 					let date = new Date(job.tanggal);
@@ -197,6 +204,39 @@ function _() {
 	this.admin.jobs.init = () => {
 		this.admin.common.sidebar();
 		$(document).ready(this.admin.jobs.ready);
+	};
+
+	this.admin.job = {};
+	this.admin.job.init = () => {
+		this.admin.common.sidebar();
+		$('select[name="status"]').dropdown();
+		$(document).ready(this.admin.job.ready);
+	};
+	this.admin.job.ready = () => {
+		let id = $('#params').data('id');
+		let jq = $.get(`/api/jobs/${id}`);
+		jq.done((job) => {
+			let date = new Date(job.tanggal);
+			let dateOpt = { day: '2-digit', month: 'long', year: 'numeric' };
+			let timeOpt = { hour: '2-digit', minute: '2-digit', hour12: false };
+			$('input[name="kode"]').val(job.kode);
+			$('select[name="status"]').dropdown('set selected', job.status);
+			$('input[name="tanggal"]').val(date.toLocaleString('id', dateOpt) + ' ' + date.toLocaleString([], timeOpt));
+			$('input[name="nama"]').val(job.nama);
+			$('input[name="handphone"]').val(job.handphone);
+			let rows = [];
+			let row_html = $('#row-template').html();
+			['grayscale', 'color', 'blank'].forEach(t => {
+				let row = $(row_html);
+				row.find('td:nth-child(1)').text(t);
+				row.find('td:nth-child(2)').text(job[`page_${t}`]);
+				row.find('td:nth-child(3)').text(job[`price_${t}`]);
+				rows.push(row);
+			});
+			console.log(rows);
+			$('table.ui.table tbody').empty().append(rows);
+		});
+		jq.fail((xhr, status, err) => console.log(xhr.responseText));
 	};
 
 }

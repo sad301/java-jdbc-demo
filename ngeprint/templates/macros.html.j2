@@ -26,3 +26,10 @@
     {{ caller() }}
   </div>
 {% endmacro %}
+
+{% macro container(header) %}
+  <div class="ui container" style="padding-top: 5em">
+    <h1 class="ui header">{{ header }}</h1>
+    {{ caller() }}
+  </div>
+{% endmacro %}
