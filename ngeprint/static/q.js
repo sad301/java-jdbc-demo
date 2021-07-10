@@ -207,36 +207,41 @@ function _() {
 	};
 
 	this.admin.job = {};
-	this.admin.job.init = () => {
-		this.admin.common.sidebar();
-		$('select[name="status"]').dropdown();
-		$(document).ready(this.admin.job.ready);
-	};
 	this.admin.job.ready = () => {
+		let idr = Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR' });
 		let id = $('#params').data('id');
 		let jq = $.get(`/api/jobs/${id}`);
-		jq.done((job) => {
-			let date = new Date(job.tanggal);
-			let dateOpt = { day: '2-digit', month: 'long', year: 'numeric' };
-			let timeOpt = { hour: '2-digit', minute: '2-digit', hour12: false };
-			$('input[name="kode"]').val(job.kode);
-			$('select[name="status"]').dropdown('set selected', job.status);
-			$('input[name="tanggal"]').val(date.toLocaleString('id', dateOpt) + ' ' + date.toLocaleString([], timeOpt));
-			$('input[name="nama"]').val(job.nama);
-			$('input[name="handphone"]').val(job.handphone);
-			let rows = [];
-			let row_html = $('#row-template').html();
-			['grayscale', 'color', 'blank'].forEach(t => {
-				let row = $(row_html);
-				row.find('td:nth-child(1)').text(t);
-				row.find('td:nth-child(2)').text(job[`page_${t}`]);
-				row.find('td:nth-child(3)').text(job[`price_${t}`]);
-				rows.push(row);
+		jq.done((data) => {
+			console.log(data);
+			$('input[name="kode"]').val(data.kode);
+			$('select[name="status"]').dropdown('set selected', data.status);
+			$('input[name="tanggal"]').val(() => {
+				let date = new Date(data.tanggal);
+				let strDate = date.toLocaleString('id', {
+					day: '2-digit',
+					month: 'long',
+					year: 'numeric'
+				});
+				let strTime = date.toLocaleString([], {
+					hour: '2-digit',
+					minute: '2-digit',
+					hour12: false
+				});
+				return strDate + ', ' + strTime;
 			});
-			console.log(rows);
-			$('table.ui.table tbody').empty().append(rows);
+			$('input[name="nama"]').val(data.nama);
+			$('input[name="handphone"]').val(data.handphone);
+			$('input[name="client_file"]').val(data.client_file);
+			['grayscale', 'color', 'blank', 'total'].forEach((t) => {
+				$(`td#page_${t}`).text(data[`page_${t}`]);
+				$(`td#price_${t}`).text(data[`price_${t}`] > 0 ? idr.format(data[`price_${t}`]) : 0);
+			});
 		});
-		jq.fail((xhr, status, err) => console.log(xhr.responseText));
+	};
+	this.admin.job.init = () => {
+		this.admin.common.sidebar();
+		$('select.ui.dropdown').dropdown();
+		$(document).ready(this.admin.job.ready);
 	};
 
 }

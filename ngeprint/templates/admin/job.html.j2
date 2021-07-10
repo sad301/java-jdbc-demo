@@ -12,7 +12,7 @@
       <div class="four wide column"></div>
       <div class="eight wide column">
         <h1 class="ui center aligned header">Job Detail</h1>
-        <div class="ui padded tiny form segment">
+        <div class="ui top attached padded tiny form segment">
           <div class="three fields">
             <div class="field">
               <label>ID :</label>
@@ -63,40 +63,44 @@
               </div>
             </div>
           </div>
-          <table class="ui three column compact celled table">
+        </div>
+        <div class="ui bottom attached padded tiny segment">
+          <div class="ui left icon transparent fluid input">
+            <i class="pdf file icon"></i>
+            <input type="text" name="client_file">
+          </div>
+          <table class="ui unstackable five column celled table">
             <thead>
-              <tr>
+              <tr class="right aligned">
                 <th></th>
-                <th>Page</th>
-                <th class="right aligned">Price</th>
+                <th>Grayscale</th>
+                <th>Color</th>
+                <th>Blank</th>
+                <th>Total</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td>Page</td>
-                <td>0</td>
-                <td class="right aligned">0</td>
+                <td id="page_grayscale" class="right aligned"></td>
+                <td id="page_color" class="right aligned"></td>
+                <td id="page_blank" class="right aligned"></td>
+                <td id="page_total" class="right aligned"></td>
+              </tr>
+              <tr>
+                <td>Price</td>
+                <td id="price_grayscale" class="right aligned"></td>
+                <td id="price_color" class="right aligned"></td>
+                <td id="price_blank" class="right aligned"></td>
+                <td id="price_total" class="right aligned"></td>
               </tr>
             </tbody>
-            <tfoot>
-              <tr>
-                <th>Total</th>
-                <th>0</th>
-                <th class="right aligned">0</th>
-              </tr>
-            </tfoot>
           </table>
+          <button class="ui tiny primary labeled icon button"><i class="save icon"></i>Update</button>
         </div>
       </div>
     </div>
   {% endcall %}
-  <template id="row-template">
-    <tr>
-      <td></td>
-      <td></td>
-      <td class="right aligned"></td>
-    </tr>
-  </template>
 {% endblock %}
 
 {% block script %}
