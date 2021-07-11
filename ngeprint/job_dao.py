@@ -3,10 +3,10 @@ import json
 
 def create(job):
 	sql = """
-	insert into jobs (id, kode, tanggal, nama, handphone, client_file, server_file, max_page)
-	values (?, ?, ?, ?, ?, ?, ?, ?)
+	insert into jobs (id, kode, tanggal, nama, handphone, client_file, server_file)
+	values (?, ?, ?, ?, ?, ?, ?)
 	"""
-	values = tuple(job.values())
+	values = (job["id"], job["kode"], job["tanggal"], job["nama"], job["handphone"], job["client_file"], job["server_file"])
 	return execute_update(sql, values)
 
 def retrieve(id=None):
@@ -18,9 +18,9 @@ def retrieve(id=None):
 
 def update(job):
 	sql = """
-	update jobs set kode=?, tanggal=?, nama=?, handphone=?, client_file=?, server_file=?, max_page=?, page_grayscale=?, page_color=?, page_blank=?, page_total=?, price_grayscale=?, price_color=?, price_blank=?, price_total=?, status=?, processed=? where id=?
+	update jobs set kode=?, tanggal=?, nama=?, handphone=?, client_file=?, server_file=?, page_grayscale=?, page_color=?, page_blank=?, page_total=?, price_grayscale=?, price_color=?, price_blank=?, price_total=?, status=?, processed=? where id=?
 	"""
-	values = (job["kode"], job["tanggal"], job["nama"], job["handphone"], job["client_file"], job["server_file"], job["max_page"], job["page_grayscale"], job["page_color"], job["page_blank"], job["page_total"], job["price_grayscale"], job["price_color"], job["price_blank"], job["price_total"], job["status"], job["processed"], job["id"])
+	values = (job["kode"], job["tanggal"], job["nama"], job["handphone"], job["client_file"], job["server_file"], job["page_grayscale"], job["page_color"], job["page_blank"], job["page_total"], job["price_grayscale"], job["price_color"], job["price_blank"], job["price_total"], job["status"], job["processed"], job["id"])
 	return execute_update(sql, values)
 
 def delete(id):

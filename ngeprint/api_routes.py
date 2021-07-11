@@ -1,12 +1,28 @@
 from flask import jsonify, request
-from ngeprint import config, app, job_dao
+from ngeprint import config, app, config_dao, job_dao
 from ngeprint.utils import new_job
 from os import remove
 from shutil import rmtree
+from base64 import b64decode
+from json import loads, dumps
 
 @app.route("/api")
 def api_index():
     return {"message": "/api index"}
+
+@app.route("/api/login", methods=["POST"])
+def api_login():
+    if not request.form:
+        return {"message": "invalid request"}, 400
+    if not all(key in request.form.keys() for key in ["data", "hash"]):
+        return {"message": "invalid request"}, 400
+    # data = request.form["data"]
+    auth = loads(b64decode(request.form["data"]).decode("utf-8"))
+    hash = request.form["hash"]
+    success, config, error = config_dao.retrieve_as_dict()
+    # print(data)
+    # print(hash)
+    return {"message": "ready!"}
 
 @app.route("/api/jobs", methods=["GET", "POST"])
 def api_jobs():

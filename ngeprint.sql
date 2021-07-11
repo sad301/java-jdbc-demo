@@ -12,7 +12,7 @@ create table jobs (
   handphone varchar(16) not null,
   client_file text not null,
   server_file text not null,
-	max_page int not null default 0,
+	-- max_page int not null default 0,
   page_grayscale int not null default 0,
   page_color int not null default 0,
   page_blank int not null default 0,
@@ -26,18 +26,11 @@ create table jobs (
   primary key (id)
 );
 
-insert into config values
-  ('user.username', 'admin'),
-  ('user.password', 'nimda'),
-  ('price.grayscale', 1000),
-  ('price.color', 1500),
-  ('price.blank', 500);
-
-create view count_jobs as
-  select j1.handphone,
-    ( select count(id) from jobs where handphone=j1.handphone and status='UNCONFIRMED' ) as 'unconfirmed_jobs',
-    ( select count(id) from jobs where handphone=j1.handphone and status='CONFIRMED' ) as 'confirmed_jobs',
-    ( select count(id) from jobs where handphone=j1.handphone and status='PRINTED' ) as 'printed_jobs',
-    ( select count(id) from jobs where handphone=j1.handphone and status='PAID' ) as 'paid_jobs'
-  from jobs j1
+create view stats as
+  select j.handphone,
+    ( select count(id) from jobs where handphone=j.handphone and status='UNCONFIRMED' ) as 'unconfirmed',
+    ( select count(id) from jobs where handphone=j.handphone and status='CONFIRMED' ) as 'confirmed',
+    ( select count(id) from jobs where handphone=j.handphone and status='PRINTED' ) as 'printed',
+    ( select count(id) from jobs where handphone=j.handphone and status='PAID' ) as 'paid'
+  from jobs j
   group by handphone;

@@ -1,6 +1,6 @@
 from flask import abort, request, render_template, make_response, redirect, url_for
 from ngeprint import app, socket_io, config, job_dao, dao
-from ngeprint.utils import new_job, process_job
+from ngeprint.utils import new_job, process_job, stats
 # from ngeprint.job_dao import retrieve
 from random import randrange
 from werkzeug.utils import secure_filename
@@ -61,7 +61,8 @@ def client_connect(id):
 				socket_io.start_background_task(target=process_job, job=jobs[0], session_id=session_id)
 			else:
 				jobs[0].pop("kode", None)
-				socket_io.emit("process_done", jobs[0], room=session_id)
+				data = {"job": jobs[0], "stats": stats(jobs[0]["handphone"])}
+				socket_io.emit("process_done", data, room=session_id)
 
 @app.errorhandler(404)
 def notFound(error):

@@ -19,13 +19,13 @@
       <div class="ui bottom attached small padded form segment">
         <div class="field">
           <div class="ui left icon input">
-            <input id="username" type="text" placeholder="Username">
+            <input id="username" type="text" name="username" placeholder="Username">
             <i class="user icon"></i>
           </div>
         </div>
         <div class="field">
           <div class="ui left icon input">
-            <input id="password" type="password" placeholder="Password">
+            <input id="password" type="password" name="password" placeholder="Password">
             <i class="key icon"></i>
           </div>
         </div>
@@ -37,5 +37,5 @@
 {% endblock %}
 
 {% block script %}
-  <script type="text/javascript">_.q().admin.init();</script>
+  <script type="text/javascript">_.q().admin.index.init();</script>
 {% endblock %}

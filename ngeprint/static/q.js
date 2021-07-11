@@ -63,7 +63,10 @@ function _() {
 		socket_io.on('process_failed', (msg) => {
 			alert(msg);
 		});
-		socket_io.on('process_done', (job) => {
+		socket_io.on('process_done', (data) => {
+			// console.log(data);
+			let job = data.job;
+			// let stats = data.stats;
 			let idr = Intl.NumberFormat('id-ID', {style: 'currency', currency: 'IDR'});
 			$('#client_file').val(job.client_file);
 			['grayscale', 'color', 'blank'].forEach(p => {
@@ -78,8 +81,31 @@ function _() {
 				$('<th/>',{'class':'right aligned'}).html(job['page_total']),
 				$('<th/>',{'class':'right aligned'}).text(idr.format(job['price_total']))
 			]);
-			if(job.page_total > job.max_page) {
-				$('table.ui.table').after($($('#warning-message-template').html()));
+			let hasWarning = false;
+			let warnings = [];
+			if(job.page_total > ((data.stats.paid + 1) * 5)) {
+				hasWarning = true;
+				warnings.push('Jumlah halaman melebihi batas maksimum');
+			}
+			if(data.stats.printed > 0) {
+				hasWarning = true;
+				warnings.push('Transaksi sebelumnya belum diselesaikan');
+			}
+			if(hasWarning) {
+				$('div.ui.warning.message').remove();
+				let msg = $('<div/>',{'class':'ui warning message'}).append(() => {
+					let content = [];
+					content.push($('<div/>',{'class':'header'}).text('Konfirmasi SMS di non-aktifkan'));
+					content.push($('<ul/>',{'class':'list'}).append(() => {
+						let ls = [];
+						warnings.forEach(w => {
+							ls.push($('<li/>').text(w));
+						});
+						return ls;
+					}));
+					return content;
+				});
+				$('table.ui.table').after(msg);
 			}
 			$('.ui.segment').removeClass('loading');
 		});
@@ -143,6 +169,47 @@ function _() {
 		$('#sidebar-toggle').click(function () {
 			$('.ui.sidebar').sidebar('toggle');
 		});
+	};
+
+	this.admin.index = {};
+	this.admin.index.reset = (e) => {
+		$(e.target).closest('.field').removeClass('error');
+	};
+	this.admin.index.login = (e) => {
+		let valid = true;
+		let user = {};
+		[$('input[name="username"]'), $('input[name="password"]')].forEach(el => {
+			if(el.val() == '') {
+				el.closest('.field').addClass('error');
+				valid &&= false;
+			}
+			else {
+				user[el.attr('name')] = el.val();
+			}
+		});
+		if(!valid) return false;
+		let auth = {
+			url: location.href,
+			timestamp: Date.now(),
+			username: user.username
+		};
+		let jsAuth = JSON.stringify(auth);
+		let payload = {
+			data: btoa(jsAuth),
+			hash: CryptoJS.HmacSHA512(jsAuth, user.password).toString(CryptoJS.enc.Base64)
+		};
+		let jq = $.ajax({
+			url: '/api/login',
+			method: 'POST',
+			data: payload,
+			beforeSend: () => $(e.target).addClass('loading')
+		});
+		jq.done((data) => console.log(data));
+		jq.fail((xhr, status, err) => console.log(xhr.responseText));
+	};
+	this.admin.index.init = () => {
+		$('input').focus(this.admin.index.reset);
+		$('button.ui.button').click(this.admin.index.login);
 	};
 
 	this.admin.home = {};

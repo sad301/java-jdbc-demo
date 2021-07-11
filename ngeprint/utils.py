@@ -10,21 +10,18 @@ from ngeprint import config, dao, job_dao, config_dao, socket_io
 # from time import sleep
 
 # jumlah maximal halaman yang bisa diprint
-def max_page(handphone):
-	paid_jobs = 0;
-	res = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (handphone,))
-	if len(res[1]) == 1:
-		paid_jobs = res[1][0]["paid_jobs"]
-	return (paid_jobs + 1) * 5
+# def max_page(handphone):
+# 	paid_jobs = 0;
+# 	res = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (handphone,))
+# 	if not res[0]:
+# 		print(str(res[2]))
+# 	if len(res[1]) == 1:
+# 		paid_jobs = res[1][0]["paid_jobs"]
+# 	return (paid_jobs + 1) * 5
 
 def new_job(request):
 	f = request.files["dokumen"]
 	handphone = request.form["handphone"]
-	# paid_jobs = 0
-	# success, data, error = dao.execute_query("select paid_jobs from count_jobs where handphone=?", (handphone,))
-	# if not success:
-	# 	return None, success, -1, error
-	# if len(data) == 1:
 	job = {
 		"id": "-".join([urandom(5).hex() for i in range(3)]),
 		"kode": "-".join([urandom(2).hex().upper() for i in range(3)]),
@@ -38,7 +35,8 @@ def new_job(request):
 		makedirs(path)
 	_, ext = splitext(job["client_file"])
 	job["server_file"] = "{}/{}{}".format(path, job["id"], ext)
-	job["max_page"] = max_page(job["handphone"])
+	# job["max_page"] = max_page(job["handphone"])
+	# print(job)
 	f.save(job["server_file"])
 	success, affected_row, error = job_dao.create(job)
 	return job, success, affected_row, error
@@ -106,5 +104,12 @@ def process_job(job, session_id):
 			socket_io.emit("process_failed", str(error), room=session_id)
 		else:
 			job.pop("kode", None)
-			socket_io.emit("process_done", job, room=session_id)
+			data = {"job": job, "stats": stats(job["handphone"])}
+			socket_io.emit("process_done", data, room=session_id)
 			print("done!")
+
+def stats(handphone):
+	success, data, error = dao.execute_query("select * from stats where handphone=?", (handphone,))
+	if not success or len(data) < 1:
+		return { "handphone": handphone, "unconfirmed": 0, "confirmed": 0, "printed": 0, "paid": 0 }
+	return data[0]
