@@ -1,5 +1,5 @@
 from flask import jsonify, request
-from ngeprint import config, app, config_dao, job_dao
+from ngeprint import config, app, config_dao, job_dao, dao
 from ngeprint.utils import new_job
 from os import remove
 from shutil import rmtree
@@ -87,3 +87,14 @@ def api_jobs_job_confirm(id):
     if not success:
         return {"message": str(error)}, 500
     return {"message": "job {} confirmed".format(id)}
+
+# @app.route("/api/stats")
+# @app.route("/api/stats/<handphone>")
+# def api_stats(handphone=None):
+#     sql = "select * from stats"
+#     if handphone:
+#         sql += " where handphone=?"
+#     success, stats, error = dao.execute_query(sql, (handphone,) if handphone else None)
+#     if not success:
+#         return {"message": str(error)}, 500
+#     return jsonify(stats)

@@ -29,10 +29,17 @@ def cost(id=None):
 def confirm(id=None):
 	if not id:
 		return redirect(url_for("index"))
-	result = job_dao.retrieve(id)
-	if not result[0] or len(result[1]) < 1:
+	success, jobs, error = job_dao.retrieve(id)
+	if not success or len(jobs) < 1:
 		return redirect(url_for("index"))
-	return render_template("confirm.html.j2", job=result[1][0])
+	job = jobs[0]
+	stat = stats(job["handphone"])
+	messages = []
+	if job["page_total"] > (stat["paid"] + 1) * 5:
+		messages.append("Jumlah halaman melebihi batas maksimum")
+	if stat["printed"] > 0:
+		messages.append("Transaksi sebelumnya belum diselesaikan")
+	return render_template("confirm.html.j2", job=job, stat=stat, messages=messages)
 
 @app.route("/done")
 @app.route("/done/<id>")
