@@ -1,5 +1,3 @@
-files
-temp
-ngeprint.db
-key.txt
-ngeprint/__pycache__
+*.jar
+sources.list
+target

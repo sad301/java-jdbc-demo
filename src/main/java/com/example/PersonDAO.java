@@ -28,8 +28,8 @@ public class PersonDAO {
     psRetrieve = connection.prepareStatement("SELECT * FROM person");
     psUpdate = connection.prepareStatement("""
       UPDATE person
-      SET first_name = ?, last_name = ?, sex = ?, email = ?, phone = ?, birth_date = ?
-      WHERE user_id = ?
+      SET first_name = ?, last_name = ?, sex = ?, email = ?, phone = ?, birth_date = ?, job_title = ?
+      WHERE id = ?
       """);
     psDelete = connection.prepareStatement("DELETE FROM person WHERE id = ?");
   }
@@ -57,7 +57,8 @@ public class PersonDAO {
       person.setSex(rs.getString("sex"));
       person.setEmail(rs.getString("email"));
       person.setPhone(rs.getString("phone"));
-      person.setBirthDate(LocalDate.parse("birth_date"));
+      person.setBirthDate(LocalDate.parse(rs.getString("birth_date"), fmt));
+      person.setJobTitle(rs.getString("job_title"));
       rows.add(person);
     }
     rs.close();
@@ -71,6 +72,8 @@ public class PersonDAO {
     psUpdate.setString(4, person.getEmail());
     psUpdate.setString(5, person.getPhone());
     psUpdate.setString(6, person.getBirthDate().format(fmt));
+    psUpdate.setString(7, person.getJobTitle());
+    psUpdate.setString(8, person.getId());
     return psUpdate.executeUpdate();
   }
 
