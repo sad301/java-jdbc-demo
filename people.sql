@@ -3,8 +3,7 @@ create database people;
 use people;
 
 create table person (
-    id int not null,
-    user_id varchar(16) not null,
+    id varchar(16) not null,
     first_name varchar(64) not null,
     last_name varchar(16) not null,
     sex enum('Male', 'Female') not null,
@@ -12,8 +11,7 @@ create table person (
     phone varchar(32) not null,
     birth_date date not null,
     job_title varchar(128) not null,
-    primary key (id),
-    unique (user_id)
+    primary key (id)
 );
 
 -- import csv file
@@ -23,4 +21,5 @@ into table person
 fields terminated by ','
 optionally enclosed by '"'
 lines terminated by '\r\n'
-ignore 1 rows;
+ignore 1 rows
+(@dummy, id, first_name, last_name, sex, email, phone, birth_date, job_title);
